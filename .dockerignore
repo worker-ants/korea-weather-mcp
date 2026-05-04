@@ -1,0 +1,13 @@
+node_modules
+dist
+.git
+.gitignore
+.env
+.env.example
+.idea
+.DS_Store
+*.log
+document
+README.md
+Dockerfile
+.dockerignore

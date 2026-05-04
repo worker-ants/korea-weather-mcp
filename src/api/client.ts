@@ -44,7 +44,7 @@ function buildUrl(
   return url;
 }
 
-async function fetchText(url: URL): Promise<string> {
+async function fetchText(url: URL, fallbackEncoding = "utf-8"): Promise<string> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   let response: Response;
@@ -56,7 +56,19 @@ async function fetchText(url: URL): Promise<string> {
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
-  return response.text();
+  const charset = parseCharset(response.headers.get("content-type")) ?? fallbackEncoding;
+  const buffer = await response.arrayBuffer();
+  try {
+    return new TextDecoder(charset, { fatal: false }).decode(buffer);
+  } catch {
+    return new TextDecoder("utf-8", { fatal: false }).decode(buffer);
+  }
+}
+
+function parseCharset(contentType: string | null): string | null {
+  if (!contentType) return null;
+  const match = /charset\s*=\s*"?([^";]+)"?/i.exec(contentType);
+  return match ? match[1].trim().toLowerCase() : null;
 }
 
 export async function fetchJson(
@@ -108,7 +120,8 @@ export async function fetchCsv(
   columns: readonly string[],
 ): Promise<CsvRow[]> {
   const url = buildUrl(baseUrl, path, { ...params, disp: "1", help: "0" });
-  const text = await fetchText(url);
+  // typ01 PHP 엔드포인트는 Content-Type charset을 명시하지 않거나 EUC-KR로 응답한다.
+  const text = await fetchText(url, "euc-kr");
 
   const rows: CsvRow[] = [];
   for (const rawLine of text.split(/\r?\n/)) {

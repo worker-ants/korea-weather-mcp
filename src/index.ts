@@ -282,6 +282,11 @@ async function startHttp(host: string, port: number): Promise<void> {
   const app = express();
   app.use(express.json());
   app.use(httpRequestLogger());
+
+  app.get("/healthz", (_req, res) => {
+    res.status(200).type("text/plain").send("ok");
+  });
+
   app.use("/mcp", apiKeyAuth(expectedKey));
 
   app.all("/mcp", async (req, res) => {

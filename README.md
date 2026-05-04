@@ -159,4 +159,5 @@ src/
 
 ## 라이선스 / 데이터 출처
 
+- 코드: MIT License ([LICENSE](LICENSE))
 - 날씨 데이터: 기상청 API 허브 (`apihub.kma.go.kr/api/typ02/openApi`, `apihub.kma.go.kr/api/typ01/url`)

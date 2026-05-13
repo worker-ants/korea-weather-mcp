@@ -1,4 +1,4 @@
-import { formatDate } from "../format.js";
+import { currentKstString, formatDate } from "../format.js";
 import { BASE_TYP02, fetchJson, handleError, type KmaJsonItem } from "./client.js";
 
 const MID_PATH = "MidFcstInfoService";
@@ -44,6 +44,7 @@ export async function getMidTermForecast(regId: string): Promise<string> {
 
     const lines: string[] = [
       `\n예보구역 ${regId} 중기 육상예보 (발표: ${tmFc})`,
+      `조회 시각: ${currentKstString()}`,
       "=".repeat(50),
     ];
 
@@ -90,6 +91,7 @@ export async function getMidTermTemperature(regId: string): Promise<string> {
 
     const lines: string[] = [
       `\n예보구역 ${regId} 중기 기온예보 (발표: ${tmFc})`,
+      `조회 시각: ${currentKstString()}`,
       "=".repeat(50),
     ];
 

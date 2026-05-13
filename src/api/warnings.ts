@@ -2,6 +2,7 @@ import {
   WARNING_CMD_MAP,
   WARNING_LEVEL_MAP,
   WARNING_TYPE_MAP,
+  currentKstString,
   prettyDateTime,
 } from "../format.js";
 import { BASE_TYP01, fetchCsv, handleError } from "./client.js";
@@ -30,15 +31,17 @@ export async function getActiveWarnings(regId?: string): Promise<string> {
     const filtered = regId ? rows.filter((r) => r.REG_ID === regId) : rows;
 
     if (filtered.length === 0) {
-      return regId
-        ? `구역코드 ${regId} 에 현재 발효 중인 기상특보가 없습니다.\n`
-        : `현재 발효 중인 기상특보가 없습니다.\n`;
+      const head = regId
+        ? `구역코드 ${regId} 에 현재 발효 중인 기상특보가 없습니다.`
+        : `현재 발효 중인 기상특보가 없습니다.`;
+      return `${head}\n조회 시각: ${currentKstString()}\n`;
     }
 
     const lines: string[] = [
       regId
         ? `\n구역 ${regId} 현재 발효 중인 기상특보 (${filtered.length}건)`
         : `\n전국 현재 발효 중인 기상특보 (${filtered.length}건)`,
+      `조회 시각: ${currentKstString()}`,
       "=".repeat(50),
     ];
 

@@ -4,6 +4,7 @@ import {
   DIRECTION_16_KR,
   PTY_MAP,
   SKY_MAP,
+  currentKstString,
   formatDate,
   pad2,
   prettyDate,
@@ -45,6 +46,7 @@ export async function getNowcastObservation(lon: number, lat: number): Promise<s
 
     return (
       `\n위도 ${lat}, 경도 ${lon} 현재 날씨:\n` +
+      `조회 시각: ${currentKstString()}\n` +
       `기온: ${data.temperature ?? "N/A"}\n` +
       `강수량: ${data.rainfall ?? "N/A"}\n` +
       `습도: ${data.humidity ?? "N/A"}\n` +
@@ -84,6 +86,7 @@ export async function getNowcastForecast(lon: number, lat: number): Promise<stri
 
     const lines: string[] = [
       `\n위도 ${lat}, 경도 ${lon} 초단기 예보 (발표: ${prettyDate(baseDate)} ${baseTime.slice(0, 2)}:${baseTime.slice(2)}시)`,
+      `조회 시각: ${currentKstString()}`,
       "=".repeat(50),
     ];
 
@@ -159,6 +162,7 @@ export async function getShortTermForecast(lon: number, lat: number): Promise<st
 
     const lines: string[] = [
       `\n위도 ${lat}, 경도 ${lon} 단기 예보 (발표: ${baseDate} ${availableTime})`,
+      `조회 시각: ${currentKstString()}`,
       `총 ${items.length}개 데이터 조회`,
       "=".repeat(50),
     ];
@@ -229,6 +233,7 @@ export async function getShortTermLandForecast(regId: string): Promise<string> {
 
     const lines: string[] = [
       `\n예보구역 ${regId} 단기 육상예보 (텍스트)`,
+      `조회 시각: ${currentKstString()}`,
       "=".repeat(50),
     ];
     for (const it of items) {
@@ -264,6 +269,7 @@ export async function getShortTermSeaForecast(regId: string): Promise<string> {
 
     const lines: string[] = [
       `\n예보구역 ${regId} 단기 해상예보 (텍스트)`,
+      `조회 시각: ${currentKstString()}`,
       "=".repeat(50),
     ];
     for (const it of items) {
@@ -300,7 +306,11 @@ export async function getWeatherSituation(stnId: number): Promise<string> {
       return `발표관서 ${stnId}에 대한 기상개황 결과가 없습니다.\n`;
     }
 
-    const lines: string[] = [`\n발표관서 ${stnId} 기상개황`, "=".repeat(50)];
+    const lines: string[] = [
+      `\n발표관서 ${stnId} 기상개황`,
+      `조회 시각: ${currentKstString()}`,
+      "=".repeat(50),
+    ];
     for (const it of items) {
       const tmFc = String(it.tmFc ?? "");
       lines.push(`■ 발표시각 ${tmFc}`);

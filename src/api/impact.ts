@@ -2,6 +2,7 @@ import {
   IMPACT_AREA_MAP,
   IMPACT_LEVEL_MAP,
   IMPACT_PARAM_MAP,
+  currentKstString,
   formatDate,
   prettyDate,
 } from "../format.js";
@@ -35,13 +36,15 @@ export async function getImpactForecast(
     const rows = await fetchCsv(BASE_TYP01, "ifs_fct_pstt.php", params, IFS_COLUMNS);
 
     if (rows.length === 0) {
-      return regId
-        ? `구역코드 ${regId} 의 ${IMPACT_PARAM_MAP[ifpar]} 영향예보 결과가 없습니다.\n`
-        : `오늘(${prettyDate(today)}) ${IMPACT_PARAM_MAP[ifpar]} 영향예보 결과가 없습니다.\n`;
+      const head = regId
+        ? `구역코드 ${regId} 의 ${IMPACT_PARAM_MAP[ifpar]} 영향예보 결과가 없습니다.`
+        : `오늘(${prettyDate(today)}) ${IMPACT_PARAM_MAP[ifpar]} 영향예보 결과가 없습니다.`;
+      return `${head}\n조회 시각: ${currentKstString()}\n`;
     }
 
     const lines: string[] = [
       `\n${IMPACT_PARAM_MAP[ifpar]} 영향예보 (기준일 ${prettyDate(today)}, ${rows.length}건)`,
+      `조회 시각: ${currentKstString()}`,
       "=".repeat(50),
     ];
 

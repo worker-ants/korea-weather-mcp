@@ -125,3 +125,18 @@ export function prettyDateTime(yyyymmddhhmm: string): string {
   if (yyyymmddhhmm.length < 12) return yyyymmddhhmm;
   return `${prettyDate(yyyymmddhhmm.slice(0, 8))} ${prettyTime(yyyymmddhhmm.slice(8, 12))}`;
 }
+
+const KST_FORMATTER = new Intl.DateTimeFormat("sv-SE", {
+  timeZone: "Asia/Seoul",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false,
+});
+
+export function currentKstString(d: Date = new Date()): string {
+  return `${KST_FORMATTER.format(d)} KST (UTC+9)`;
+}
